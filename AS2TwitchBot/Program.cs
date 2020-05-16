@@ -23,7 +23,7 @@ namespace AS2TwitchBot
             {
                 try
                 {
-                    var response = await client.GetAsync("https://aiae.ovh/brownie/twitchbot/latestversion.txt");
+                    var response = await client.GetAsync("https://raw.githubusercontent.com/audiosurf/AS2TwitchBot/master/lastestversion.txt");
 
                     if (await response.Content.ReadAsStringAsync() == System.Reflection.Assembly.GetEntryAssembly().GetName().Version.ToString())
                     {
