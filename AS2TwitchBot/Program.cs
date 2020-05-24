@@ -82,10 +82,10 @@ namespace AS2TwitchBot
             void runProgram()
             {
                 string _twitchOAuth = getSetting("twitchOAuth", "\nPlease enter Twitch OAuth Token for the bot from https://twitchapps.com/tmi/");
-                string _botName = getSetting("botName", "\nPlease enter Bot username (the account name you used on the OAuth step)");
-                string _broadcasterName = getSetting("broadcasterName", "\nPlease enter the twitch channelname");
+                string _botName = getSetting("botName", "\nPlease enter Bot username (the account name you used on the OAuth step)").ToLower() ;
+                string _broadcasterName = getSetting("broadcasterName", "\nPlease enter the twitch channelname").ToLower();
                 string _as2ApiKey = getSetting("as2ApiKey", "\nPlease enter the Audiosurf2.info API Key from https://audiosurf2.info/user/settings");
-                string _withPrefix = getSetting("withPrefix", "\nShould the bot use the prefix !sr and !songrequest ? if not then all youtube links will be used\n(yes/no)");
+                string _withPrefix = getSetting("withPrefix", "\nShould the bot use the prefix !sr and !songrequest ? if not then all youtube links will be used\n(yes/no)").ToLower();
                 string _serverIp = getSetting("serverIp", "");
 
                 Console.Clear();
@@ -139,7 +139,7 @@ namespace AS2TwitchBot
 
                         if (match.Success && match.Groups[1].Value.Length == 11)
                         {
-                            if (_withPrefix.ToLower().StartsWith("y"))
+                            if (_withPrefix.StartsWith("y"))
                             {
                                 if (message.ToLower().StartsWith("!sr") || message.ToLower().StartsWith("!songrequest"))
                                 {
