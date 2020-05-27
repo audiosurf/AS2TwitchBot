@@ -31,7 +31,8 @@ namespace AS2TwitchBot
                     }
                     else
                     {
-                        Console.WriteLine("New bot version available please download it");
+                        Console.WriteLine("New bot version available please download it at:");
+                        Console.WriteLine("https://github.com/audiosurf/AS2TwitchBot/releases/latest");
                         Console.WriteLine("Press enter to close...");
                         Console.ReadLine();
                     }
