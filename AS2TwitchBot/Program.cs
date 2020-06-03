@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.IO;
 using System.Net.Http;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -54,7 +55,9 @@ namespace AS2TwitchBot
 
             String getSetting(String key, String message)
             {
-                var configFile = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+                ExeConfigurationFileMap fileMap = new ExeConfigurationFileMap();
+                fileMap.ExeConfigFilename = Directory.GetCurrentDirectory() + "\\AS2TwitchBotConfig.xml";
+                Configuration configFile = ConfigurationManager.OpenMappedExeConfiguration(fileMap, ConfigurationUserLevel.None);
                 var settings = configFile.AppSettings.Settings;
 
                 if (settings[key] != null)
