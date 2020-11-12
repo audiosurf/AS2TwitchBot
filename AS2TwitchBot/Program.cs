@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
@@ -91,6 +92,31 @@ namespace AS2TwitchBot
                 string _as2ApiKey = getSetting("as2ApiKey", "\nPlease enter the Audiosurf2.info API Key from https://audiosurf2.info/user/settings");
                 string _withPrefix = getSetting("withPrefix", "\nShould the bot use the prefix !sr and !songrequest ? if not then all youtube links will be used\n(yes/no)").ToLower();
                 string _serverIp = getSetting("serverIp", "");
+                string _steamid = "";
+                getSteamid();
+
+                async void getSteamid()
+                {
+                    var values = new Dictionary<string, string> {
+                        { "apiKey", _as2ApiKey }
+                    };
+
+                    var content = new FormUrlEncodedContent(values);
+
+                    try
+                    {
+                        var response = await client.PostAsync(_serverIp + "/api/steamid", content);
+
+                        var responseString = await response.Content.ReadAsStringAsync();
+                        var responseObject = JObject.Parse(responseString);
+                        if ((string)responseObject["steamid"] == "False") throw new Exception("wrong apikey");
+                        _steamid = (string)responseObject["steamid"];
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e);
+                    }
+                }
 
                 Console.Clear();
 
@@ -147,16 +173,21 @@ namespace AS2TwitchBot
                             {
                                 if (message.ToLower().StartsWith("!sr") || message.ToLower().StartsWith("!songrequest"))
                                 {
-                                    sendToServer(match.Groups[1].Value);
+                                    sendQueueRequest(match.Groups[1].Value);
                                 }
                             }
                             else
                             {
-                                sendToServer(match.Groups[1].Value);
+                                sendQueueRequest(match.Groups[1].Value);
                             }
                         }
 
-                        async void sendToServer(String youtubeId)
+                        if (message.ToLower().StartsWith("!queue") || message.ToLower().StartsWith("!playlist"))
+                        {
+                            irc.SendPublicChatMessage("@" + userName + " " + "You can view the queue here: " + _serverIp + "/twitch/queue/" + _steamid);
+                        }
+
+                        async void sendQueueRequest(String youtubeId)
                         {
                             Console.WriteLine("sending id: " + youtubeId + " to server");
                             var values = new Dictionary<string, string> {
